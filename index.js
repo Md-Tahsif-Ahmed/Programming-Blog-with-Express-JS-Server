@@ -40,13 +40,21 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     })
-    
+
     app.post('/wishlist/:email', async (req, res)=>{
       const newWishlist = req.body;
       const result = await wishlistCollection.insertOne(newWishlist);
       console.log(result)
       res.send(result);
     })
+    app.delete('/wishlist/:_id', async (req, res) => {
+      const _id = req.params._id;
+      console.log('Received delete request for ID:', _id); // Add this line for debugging
+      const query = { _id: _id };
+      const result = await wishlistCollection.deleteOne(query);
+      console.log('Delete result:', result);
+      res.send(result);
+    });
 
   
 
