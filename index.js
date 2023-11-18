@@ -31,6 +31,11 @@ async function run() {
     //   console.log(result);
       res.send(result);
     });
+    app.post('/allblogs', async (req, res)=> {
+      const newBlog = req.body;
+      const result = await blogsCollection.insertOne(newBlog);
+      res.send(result);
+    })
 
     // server
     app.get('/wishlist/:email', async (req, res)=>{
