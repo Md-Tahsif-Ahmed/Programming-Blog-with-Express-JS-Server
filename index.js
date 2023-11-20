@@ -24,13 +24,20 @@ async function run() {
     const blogsCollection = client.db(BlogDB).collection("blogs");
     const wishlistCollection = client.db(BlogDB).collection("wishlist");
 
-    // Routes
-    app.get('/allblogs', async (req, res) => { // Added forward slash here
-      const cursor = blogsCollection.find();
-      const result = await cursor.toArray();
-    //   console.log(result);
-      res.send(result);
-    });
+ // Routes
+app.get('/allblogs', async (req, res) => {
+  const options = {
+    // Sort returned documents in descending order by date (latest first)
+    sort: { date: -1 },
+    // Include only the `date` field in each returned document
+    projection: {},
+  };
+  const cursor = blogsCollection.find({}, options); // Pass the options object as the second parameter
+  const result = await cursor.toArray();
+  //   console.log(result);
+  res.send(result);
+});
+
     app.post('/allblogs', async (req, res)=> {
       const newBlog = req.body;
       const result = await blogsCollection.insertOne(newBlog);
