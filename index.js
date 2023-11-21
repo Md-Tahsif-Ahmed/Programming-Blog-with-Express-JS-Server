@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
 const dotenv = require('dotenv');
 
@@ -43,6 +43,27 @@ app.get('/allblogs', async (req, res) => {
       const result = await blogsCollection.insertOne(newBlog);
       res.send(result);
     })
+    app.put('/allblogs/:id', async (req, res) => {
+      const id = req.params.id;
+      console.log('Received ID:', id);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateBlog = req.body;
+      const blog = {
+        $set: {
+          title: updateBlog.title,
+          image:updateBlog.image,
+          category: updateBlog.category,
+          short:updateBlog.short,
+          long: updateBlog.long,
+          time: updateBlog.time,
+          date: updateBlog.date
+        }
+      };
+      const result = await blogsCollection.updateOne(filter, blog, options);
+      res.send(result);
+    });
+
 
     // server
     app.get('/wishlist/:email', async (req, res)=>{
