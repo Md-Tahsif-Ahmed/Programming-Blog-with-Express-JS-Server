@@ -23,6 +23,7 @@ async function run() {
     console.log("Connected to MongoDB!");
     const blogsCollection = client.db(BlogDB).collection("blogs");
     const wishlistCollection = client.db(BlogDB).collection("wishlist");
+    const commentCollection = client.db(BlogDB).collection("comment");
 
  // Routes
 app.get('/allblogs', async (req, res) => {
@@ -88,6 +89,19 @@ app.get('/allblogs', async (req, res) => {
       console.log('Delete result:', result);
       res.send(result);
     });
+
+    // Comment section
+    app.get('/comments', async (req, res)=>{
+     
+      const cursor = commentCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+    app.post('/comments', async (req, res)=> {
+      const newComment = req.body;
+      const result = await commentCollection.insertOne(newComment);
+      res.send(result);
+    })
 
   
 
