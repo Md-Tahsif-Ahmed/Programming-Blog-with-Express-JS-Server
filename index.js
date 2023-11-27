@@ -1,6 +1,7 @@
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -8,7 +9,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use(express.json());
 const BlogDB = "ProgrammingBlog";
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vhtgohj.mongodb.net/?retryWrites=true&w=majority`;
@@ -24,6 +29,20 @@ async function run() {
     const blogsCollection = client.db(BlogDB).collection("blogs");
     const wishlistCollection = client.db(BlogDB).collection("wishlist");
     const commentCollection = client.db(BlogDB).collection("comment");
+
+// auth releted API
+app.post('/jwt', async (req, res)=>{
+  const user = req.body;
+  console.log('user for token', user);
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1hr' });
+  res.cookie('token', token,{
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none'
+  })
+  .send({success: true});
+})
+
 
  // Routes
 app.get('/allblogs', async (req, res) => {
