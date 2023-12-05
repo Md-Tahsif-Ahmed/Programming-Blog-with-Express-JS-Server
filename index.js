@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'https://programming-blog-77298.web.app',
   credentials: true
 }));
 
@@ -46,8 +46,8 @@ const verifyToken = (req, res, next)=>{
 async function run() {
   try {
     // Connect the client to the server
-    await client.connect();
-    console.log("Connected to MongoDB!");
+    // await client.connect();
+    // console.log("Connected to MongoDB!");
     const blogsCollection = client.db(BlogDB).collection("blogs");
     const wishlistCollection = client.db(BlogDB).collection("wishlist");
     const commentCollection = client.db(BlogDB).collection("comment");
@@ -158,7 +158,7 @@ app.get('/allblogs', logger, async (req, res) => {
   
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
